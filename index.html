@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <div id="app">
+    <p>姓名{{name}}</p>
+    <p>年龄{{age}}</p>
+    <p>address:{{address}}</p>
+    <button @click="increase">年龄 +1 </button>
+    <input v-model="age" :name="name">
+
+    <p v-text="name"></p>
+    <p v-html="html"></p>
+    <p v-show="show">this is a v-show demo</p>
+
+    <p v-if="if" el=1>{{address[0]}}</p>
+    <p v-else el=2>{{address[1]}}</p>
+
+    <ul id="for">
+      <li v-for="item in address">
+        {{item}}
+      </li>
+    </ul>
+
+    <p v-my-directive="name">new directive</p>
+    <mp-component :name="obj" @send="sayTest">
+      <template slot="header">
+        <h1>named slot</h1>
+      </template>
+      <template>
+        <h1>no name slot</h1>
+      </template>
+    </mp-component>
+  </div>
+</body>
+</html>

@@ -1,1 +1,1 @@
-# mini_vue
+# mini_vue 实现最小功能的 vue 库

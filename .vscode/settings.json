@@ -1,0 +1,17 @@
+{
+  "editor.formatOnSave": true,
+  "[typescript]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+  },
+  "[javascript]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+  },
+  "eslint.validate": [
+    "typescript",
+    "javascript"
+  ],
+  "files.associations": {
+    "*.ts": "typescript",
+    "*.js": "javascript"
+  }
+}
