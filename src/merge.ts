@@ -1,4 +1,6 @@
-function guardComponents(options) {
+import MiniVue from './main'
+
+function guardComponents(options: any) {
   if (options.components) {
     const { components } = options
     const keys = Object.keys(components)
@@ -7,10 +9,10 @@ function guardComponents(options) {
     })
   }
 }
-export function mergeOptions(parent, child, vm) {
+export function mergeOptions(parent: any, child: any, vm: any) {
   // 自定义组件继承 Vue ，还没有实例化
   guardComponents(child)
-  const options = {}
+  const options: any = {}
   let key
 
   if (child.extends) {
@@ -21,10 +23,10 @@ export function mergeOptions(parent, child, vm) {
   }
 
   if (child.mixins) {
-    for (const i = 0; i < child.mixins.length; i++) {
+    for (let i = 0; i < child.mixins.length; i++) {
       const mixin = child.mixins[i]
       // const mixinOptions = mixin.prototype instanceof MiniVue ? mixin.options: mixin
-      parent = mergeOptions(parent, mixinOptions, vm)
+      parent = mergeOptions(parent, mixin.Options, vm)
     }
   }
 
@@ -33,12 +35,12 @@ export function mergeOptions(parent, child, vm) {
   }
 
   for (key in child) {
-    if (!hasOwn(parent, key)) {
+    if (!Object.hasOwn(parent, key)) {
       mergeField(key)
     }
   }
 
-  function mergeField(key) {
+  function mergeField(key: string) {
     const strat = strats[key] || defaultStrat
     options[key] = strat(parent[key], child[key], vm, key)
   }
