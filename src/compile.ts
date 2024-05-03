@@ -1,25 +1,11 @@
+import Directive, { IDescriptor } from './directive'
 import { getAttr, getBindAttr } from './utils'
-interface IDesItem {
-  vm: any
-  el?: Element | Text
-  arg?: any
-  name: string
-  attr?: string
-  expression?: string
-  filters?: {
-    name: string
-  }[]
-  def: any
-  modifiers?: {
-    literal: boolean
-  }
-  prop?: any
-}
+type IDesItem = IDescriptor
 const des: IDesItem[] = []
 // 当前是否在解析指令
 let pending = false
 
-export function compile(vm: any, el: Element) {
+export function compile(vm: any, el: Node) {
   // 如果当前节点不是v-for指令，则继续解析子节点
   if (!compileNode(el, vm)) {
     if (el.hasChildNodes()) {
@@ -30,10 +16,11 @@ export function compile(vm: any, el: Element) {
   if (!pending) {
     let dir
     let descriptor: IDesItem | undefined
+    pending = true
     sortDescriptors(des)
     while (des.length) {
       descriptor = des.shift() as IDesItem
-      dir = new Directives(descriptor, descriptor.vm)
+      dir = new Directive(descriptor, descriptor.vm)
 
       dir._bind()
       descriptor.vm._directives.push(dir)
@@ -91,6 +78,17 @@ export function compileProps(vm: any, el: Element, propsOptions: any) {
   })
 }
 
+function sortDescriptors(des: IDesItem[]) {
+  des.forEach((d) => {
+    if (!d.def.priority) {
+      d.def.priority = 1000
+    }
+  })
+
+  des.sort((a, b) => {
+    return b.def.priority! - a.def.priority!
+  })
+}
 /** 判断是否是for循环的节点； 2.对元素的指令进行处理 */
 function compileNode(node: Element, vm: any) {
   const type = node.nodeType

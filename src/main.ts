@@ -197,6 +197,19 @@ MiniVue.prototype = {
       })
     }
   },
+  _initComputed() {
+    if (this.$options.computed) {
+      const { computed } = this.$options
+      Object.keys(computed).forEach((key) => {
+        Object.defineProperty(this, key, {
+          enumerable: true,
+          configurable: true,
+          get: makeComputedGetter(computed[key], this),
+          set: noop
+        })
+      })
+    }
+  },
   _compile() {
     const options = this.$options
     options.el = this.$el = query(options.el)
@@ -236,5 +249,20 @@ function transclude(el: Element, options: any) {
 
 const classifyRE = /(?:^|[-_\/])(\w)/g
 function classify(str: string) {}
+
+function makeComputedGetter(getter: Function, vm: any) {
+  const watcher = new Watcher(vm, getter, null, {
+    lazy: true
+  })
+  return function computedGetter() {
+    if (watcher.dirty) {
+      watcher.evalute()
+    }
+    if (Dep.target) {
+      watcher.depend()
+    }
+    return watcher.value
+  }
+}
 
 export default MiniVue
