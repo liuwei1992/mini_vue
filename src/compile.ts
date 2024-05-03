@@ -1,11 +1,12 @@
 import Directive, { IDescriptor } from './directive'
+import type { MiniVue } from './main'
 import { getAttr, getBindAttr } from './utils'
 type IDesItem = IDescriptor
 const des: IDesItem[] = []
 // 当前是否在解析指令
 let pending = false
 
-export function compile(vm: any, el: Node) {
+export function compile(vm: MiniVue, el: Node) {
   // 如果当前节点不是v-for指令，则继续解析子节点
   if (!compileNode(el, vm)) {
     if (el.hasChildNodes()) {
@@ -34,7 +35,7 @@ export function compile(vm: any, el: Node) {
   }
 }
 
-export function compileProps(vm: any, el: Element, propsOptions: any) {
+export function compileProps(vm: MiniVue, el: Element, propsOptions: any) {
   const { directives } = vm.$options
   const props: any = []
   let prop: any
@@ -129,7 +130,7 @@ const onRe = /^(v-on:|@)/
 const bindRe = /^(v-bind:|:)/
 const dirAttrRE = /^v-([^:]+)(?:$|:(.*)$)/
 
-function compileElement(node: Element, vm: any) {
+function compileElement(node: Element, vm: MiniVue) {
   const directives = vm.$options.directives
   const tag = node.tagName.toLowerCase()
 

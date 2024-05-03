@@ -1,6 +1,7 @@
 import { compile } from './compile'
 import Directive from './directive'
 import { getAttr, insert, off, on, remove, replace } from './utils'
+import { Watcher } from './watcher'
 
 const ON = 700
 const MODEL = 800

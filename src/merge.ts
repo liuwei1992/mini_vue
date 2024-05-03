@@ -9,7 +9,7 @@ function guardComponents(options: any) {
     })
   }
 }
-export function mergeOptions(parent: any, child: any, vm: any) {
+export function mergeOptions(parent: any, child: any, vm?: any) {
   // 自定义组件继承 Vue ，还没有实例化
   guardComponents(child)
   const options: any = {}

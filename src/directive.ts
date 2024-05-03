@@ -1,7 +1,8 @@
+import { MiniVue } from './main'
 import { extend } from './utils'
 
 export interface IDescriptor {
-  vm: any
+  vm: MiniVue
   el?: HTMLElement
   arg?: any
   name: string
@@ -56,7 +57,7 @@ export default class Directive {
   Component: IComponent | null = null
   parentWatcher: any | null = null
 
-  constructor(public descriptor: IDescriptor, public vm: any) {
+  constructor(public descriptor: IDescriptor, public vm: MiniVue) {
     this.name = descriptor.name
     this.expression = descriptor.expression
     this.el = descriptor.el

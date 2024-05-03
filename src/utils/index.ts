@@ -50,7 +50,7 @@ export function bind(fn: Function, ctx: any) {
   }
 }
 
-export function def(obj: any, key: string, val: any, enumerable: boolean) {
+export function def(obj: any, key: string, val: any, enumerable?: boolean) {
   Object.defineProperty(obj, key, {
     value: val,
     enumerable: !!enumerable,
@@ -72,4 +72,36 @@ export function insert(newNode: Node, oldNode: Node) {
 
 export function addClass(el: Element, cls: string) {
   el.classList.add(cls)
+}
+
+export function hasOwn(obj: Object, key: string) {
+  return obj.hasOwnProperty(key)
+}
+
+export function isArray(arg: any) {
+  return Array.isArray(arg)
+}
+
+export function makeGetterFn(body: string) {
+  return new Function('vm', 'return vm.' + body)
+}
+
+export function firstWordtoUpper(str: string) {
+  return str.substring(0, 1).toUpperCase() + str.substring(1)
+}
+
+export function trimNode(node: Node) {
+  let child
+  while (((child = node.firstChild), isTrimmable(child))) {
+    node.removeChild(child as Node)
+  }
+  while (((child = node.lastChild), isTrimmable(child))) {
+    node.removeChild(child as Node)
+  }
+}
+
+function isTrimmable(node: Node) {}
+
+export function isObject(obj: any) {
+  return typeof obj === 'object' && obj !== null
 }

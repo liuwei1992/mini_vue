@@ -1,26 +1,38 @@
+import { Watcher } from './watcher'
+
 let uid = 0
-Dep.target = null
 
-interface DepThis {
+// 发布者，收集watcher
+export default class Dep {
   id: number
-  subs: any[]
-}
+  subs: Watcher[] = []
 
-export type TDep = any
+  static target: Watcher | null = null
 
-export default function Dep(this: DepThis) {
-  this.id = uid++
-  // watcher 实例
-  this.subs = []
-}
+  constructor() {
+    this.id = uid++
+  }
 
-Dep.prototype = {
   depend() {
     if (Dep.target) {
       Dep.target.addDep(this)
     }
-  },
-  addSub(sub: any) {
+  }
+
+  addSub(sub: Watcher) {
     this.subs.push(sub)
+  }
+
+  removeSub(sub: Watcher) {
+    const index = this.subs.indexOf(sub)
+    if (index > -1) {
+      this.subs.slice(index, 1)
+    }
+  }
+
+  notify() {
+    this.subs.forEach((watcher) => {
+      watcher.update()
+    })
   }
 }
