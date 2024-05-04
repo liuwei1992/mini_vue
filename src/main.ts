@@ -24,7 +24,7 @@ export class MiniVue {
   _isMiniVue: boolean = true
   _watchers: Watcher[] = []
   _events: AnyObject = {}
-  _directives: any[] = []
+  _directives: Directive[] = []
   _context: any
   _data: any
 
@@ -172,7 +172,7 @@ export class MiniVue {
     })
   }
 
-  $watch(expOrFn: any, callback: any, options: any) {
+  $watch(expOrFn: any, callback: any, options?: any) {
     new Watcher(this, expOrFn, callback, options)
   }
 

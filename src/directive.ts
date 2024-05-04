@@ -1,19 +1,19 @@
+import directives from './directives'
 import { MiniVue } from './main'
 import { extend } from './utils'
-
-export interface IDescriptor {
+import { Watcher } from './watcher'
+export type TDirectives = typeof directives
+export interface IDescriptor<D extends keyof TDirectives> {
   vm: MiniVue
-  el?: HTMLElement
-  arg?: any
-  name: string
+  el?: HTMLElement | Node
+  arg?: string // v-on: v-bind: 后面的内容
+  name: 'on' | 'bind' | 'component' | 'slot' | 'text' //... on bind
   attr?: string
-  expression?: string
+  expression?: string // {xxx}
   filters?: {
     name: string
   }[]
-  def: {
-    priority?: number
-  }
+  def: TDirectives[D]
   modifiers?: {
     literal: boolean
   }
@@ -34,7 +34,7 @@ interface IComponent {
 export default class Directive {
   name
   expression
-  el: HTMLElement | null = null
+  el: Node | null = null
   filters
   modifiers
   literal
@@ -56,8 +56,9 @@ export default class Directive {
   isFirst: boolean | null = null
   Component: IComponent | null = null
   parentWatcher: any | null = null
+  handler: EventListenerOrEventListenerObject | null = null
 
-  constructor(public descriptor: IDescriptor, public vm: MiniVue) {
+  constructor(public descriptor: IDescriptor<any>, public vm: MiniVue) {
     this.name = descriptor.name
     this.expression = descriptor.expression
     this.el = descriptor.el
@@ -96,7 +97,7 @@ export default class Directive {
         { filters: this.filters }
       ))
       if (this.update) {
-        this.update(watcher.walue)
+        this.update(watcher.value)
       }
     }
   }

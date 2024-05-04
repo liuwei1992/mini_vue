@@ -54,16 +54,16 @@ const directives = {
   // @ | v-on
   on: {
     priority: ON,
-    update(this: any, handler: (...arg: any) => any) {
+    update(this: Directive, handler: EventListenerOrEventListenerObject) {
       if (this.handler) {
-        off(this.el, this.descriptor.arg, this.handler)
+        off(this.el!, this.descriptor.arg, this.handler)
       }
       this.handler = handler
-      on(this.el, this.descriptor.arg, this.handler)
+      on(this.el!, this.descriptor.arg, this.handler)
     },
-    unbind(this: any) {
+    unbind(this: Directive) {
       if (this.handler) {
-        off(this.el, this.descriptor.arg, this.handler)
+        off(this.el!, this.descriptor.arg, this.handler)
       }
     }
   },
@@ -196,7 +196,10 @@ const directives = {
       const prop = this.descriptor.prop
       const childKey = prop!.path
       const parentKey = prop!.parentPath
-      const parentWatcher = (this.parentWatcher = new Watcher()) //...
+      const parentWatcher = (this.parentWatcher = new Watcher(
+        parent,
+        parentKey
+      )) //...
       defineReactive(child, prop?.path, parentWatcher.value)
     },
     unbind(this: Directive) {}
@@ -233,3 +236,5 @@ function getValue(el: HTMLSelectElement, multi: boolean, init: boolean) {
 }
 
 export default directives
+
+

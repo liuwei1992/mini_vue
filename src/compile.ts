@@ -1,7 +1,7 @@
-import Directive, { IDescriptor } from './directive'
+import Directive, { IDescriptor, TDirectives } from './directive'
 import type { MiniVue } from './main'
 import { getAttr, getBindAttr } from './utils'
-type IDesItem = IDescriptor
+type IDesItem<D extends keyof TDirectives = any> = IDescriptor<D>
 const des: IDesItem[] = []
 // 当前是否在解析指令
 let pending = false
@@ -20,11 +20,11 @@ export function compile(vm: MiniVue, el: Node) {
     pending = true
     sortDescriptors(des)
     while (des.length) {
-      descriptor = des.shift() as IDesItem
-      dir = new Directive(descriptor, descriptor.vm)
+      descriptor = des.shift()
+      dir = new Directive(descriptor!, descriptor!.vm)
 
       dir._bind()
-      descriptor.vm._directives.push(dir)
+      descriptor!.vm._directives.push(dir)
     }
     pending = false
     vm._callHook('compiled')
@@ -181,7 +181,7 @@ function compileElement(node: Element, vm: MiniVue) {
       } else if (bindRe.test(name)) {
         // 动态属性
         const values = value.split('|')
-        const temp: any = {
+        const temp: IDescriptor<'bind'> = {
           vm,
           el: node,
           arg: name.replace(bindRe, ''),
@@ -189,6 +189,7 @@ function compileElement(node: Element, vm: MiniVue) {
           attr: name,
           def: directives.bind
         }
+
         if (values.length > 1) {
           const expression = values.shift()
           const filters: any = []
@@ -210,7 +211,7 @@ function compileElement(node: Element, vm: MiniVue) {
   }
 }
 function processTextToken(
-  token: { value: string; tag?: boolean; descriptor?: IDesItem },
+  token: { value: string; tag?: boolean; descriptor?: IDesItem<'text'> },
   vm: any
 ): Text | null {
   const { directives } = vm.$options

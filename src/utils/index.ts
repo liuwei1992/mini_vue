@@ -91,6 +91,7 @@ export function firstWordtoUpper(str: string) {
 }
 
 export function trimNode(node: Node) {
+  document.createElement()
   let child
   while (((child = node.firstChild), isTrimmable(child))) {
     node.removeChild(child as Node)
